@@ -16,9 +16,21 @@ if(isset($_GET['action'])){
             $rows = $crud->read();
             break;
 
-            default:
-            $rows = $crud->read();
+        case 'update':
+            if(isset($_POST['id'])){
+                $crud->update($_POST);
+            }
+            $rows = $crud->read();   
             break;
+
+            case 'delete':
+                $crud->delete($_GET['id']);
+                $rows = $crud->read();
+                break;
+                
+
+        default:
+        $rows = $crud->read();    
     } 
     }else{
         $rows = $crud->read();
@@ -113,7 +125,7 @@ if(isset($_GET['action'])){
                 $id = $_GET['id'];
                 $result =$crud->readOne($id);
 
-                if($result){
+                if(!$result){
                     echo "registro não encontrado.";
                     exit();
                 }
@@ -122,20 +134,31 @@ if(isset($_GET['action'])){
                 $placa = $result['placa'];
                 $cor = $result['cor'];
                 $ano = $result['ano'];
-        
+            ?>
+
+        <form action="?action=update" method="POST">
+            <input type="hidden" name="id" value="<?php echo $id ?>">
+            <label for="modelo">modelo</label>
+            <input type="text" name="modelo" value="<?php echo $modelo ?>">
+
+            <label for="marca">marca</label>
+            <input type="text" name="marca" value="<?php echo $marca ?>">
+
+            <label for="marca">placa</label>
+            <input type="text" name="placa" value="<?php echo $placa ?>">
+
+            <label for="marca">cor</label>
+            <input type="text" name="cor" value="<?php echo $cor ?>">
+
+            <label for="ano">marca</label>
+            <input type="text" name="ano" value="<?php echo $ano ?>">
+
+            <input type="submit" value="atualizar" name="enviar" onclick="return confirm('certeza que deja atualizar')">
+
+        </form>
+        <?php
+        }else{
         ?>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -157,7 +180,9 @@ if(isset($_GET['action'])){
 
         <input type="submit" value="Cadastrar" name="enviar">
     </form>
-
+        <?php
+        }
+        ?>
     <table>
         <tr>
             <td>Id</td>
